@@ -6,9 +6,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.IProductService;
+import org.example.IProductRepository;
 import org.example.Product;
-import org.example.ProductService;
+import org.example.ProductRepository;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,12 +16,12 @@ import java.util.List;
 
 @WebServlet("/products/*")
 public class ProductServlet extends HttpServlet {
-    private final IProductService productService = new ProductService();
+    private final IProductRepository productRepository = new ProductRepository();
     private Gson gson = new Gson();
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
          Product product = gson.fromJson(readRequestBody(request),Product.class);
-         productService.addProduct(product);
+         productRepository.addProduct(product);
          response.setContentType("application/json");
         response.getWriter().write(gson.toJson(product));
 
@@ -32,12 +32,12 @@ public class ProductServlet extends HttpServlet {
           String pathInfo = request.getPathInfo();
            response.setContentType("application/json");
            if(pathInfo == null || pathInfo.equals("/")){
-               List<Product>products = productService.getProducts();
+               List<Product>products = productRepository.getProducts();
                response.getWriter().write(gson.toJson(products));
            }else {
                try {
                    int productId = Integer.parseInt(pathInfo.substring(1));
-                   Product product = productService.getProductById(productId);
+                   Product product = productRepository.getProductById(productId);
                    if(product!=null){
                        response.getWriter().write(gson.toJson(product));
                    }else{
@@ -64,7 +64,7 @@ public class ProductServlet extends HttpServlet {
 
         try {
             int productId = Integer.parseInt(pathInfo.substring(1));
-            Product existing = productService.getProductById(productId);
+            Product existing = productRepository.getProductById(productId);
 
             if (existing == null) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -74,7 +74,7 @@ public class ProductServlet extends HttpServlet {
 
             Product updatedProduct = gson.fromJson(readRequestBody(request), Product.class);
             updatedProduct.setId(productId);
-            productService.updateProduct(updatedProduct);
+            productRepository.updateProduct(updatedProduct);
             response.getWriter().write(gson.toJson(updatedProduct));
 
         } catch (NumberFormatException e) {
@@ -89,7 +89,7 @@ public class ProductServlet extends HttpServlet {
          if(pathInfo != null && pathInfo.length()>1){
              try {
                  int productId = Integer.parseInt(pathInfo.substring(1));
-                 boolean removed = productService.deleteProduct(productId);
+                 boolean removed = productRepository.deleteProduct(productId);
                  if(removed){
                      response.getWriter().write("Product deleted successfully");
                  }else{

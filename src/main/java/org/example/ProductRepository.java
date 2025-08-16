@@ -3,7 +3,7 @@ package org.example;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductService implements IProductService{
+public class ProductRepository implements IProductRepository {
     private static List<Product> products =  new ArrayList<>();
     private static int nextId=1;
     @Override
