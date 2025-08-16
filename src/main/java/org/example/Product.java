@@ -38,9 +38,9 @@ public class Product {
         return name;
     }
 
-    @Override
-    public String toString() {
-        return "\nId= "+id+"\n"+"Name: "+name+"\n"+"Price: "+price;
-    }
+   // @Override
+    //public String toString() {
+//        return "\nId= "+id+"\n"+"Name: "+name+"\n"+"Price: "+price;
+//    }
 
 }

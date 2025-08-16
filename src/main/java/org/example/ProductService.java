@@ -5,8 +5,10 @@ import java.util.List;
 
 public class ProductService implements IProductService{
     private static List<Product> products =  new ArrayList<>();
+    private static int nextId=1;
     @Override
     public void addProduct(Product product) {
+        product.setId(nextId++);
         products.add(product);
     }
 
@@ -36,7 +38,7 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public void deleteProduct(int productId) {
-        products.removeIf(p -> p.getId() == productId);
+    public boolean deleteProduct(int productId) {
+       return products.removeIf(p -> p.getId() == productId);
     }
 }
